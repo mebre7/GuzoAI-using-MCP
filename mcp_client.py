@@ -19,7 +19,18 @@ MCP_client = MultiServerMCPClient(
             "transport": "stdio", # stdio, sse, websocket, http
             # "url": "https://html.duckduckgo.com/html"
         },
-
+        # AviationStack MCP server
+        "Aviationstack MCP": {
+            "transport": "stdio",
+            "command": "uvx",
+            "args": [
+                "--with", "mcp[cli]>=1.10.1,<2",
+                "aviationstack-mcp"
+            ],
+            "env": {
+                "AVIATION_STACK_API_KEY": os.environ.get("AVIATIONSTACK_API_KEY"),
+          }
+        }
 
     }
 )
