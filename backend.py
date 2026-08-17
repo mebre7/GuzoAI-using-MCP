@@ -30,8 +30,9 @@ from langchain_groq import ChatGroq
 from langchain_core.runnables import RunnableConfig
 
 # from tools.search_tool import duckduckgo_search # replaced with MCP version
-from mcp_client_test import search_with_ddg
-from tools.flight_tool import search_flights
+# from mcp_client_test import search_with_ddg
+# from tools.flight_tool import search_flights
+from mcp_client import search_flight_info_with_mcp, search_hotels_info_with_mcp
 
 def get_database_url():
     db_url = os.getenv("DATABASE_URL")
@@ -69,14 +70,55 @@ class TravelState(TypedDict):
     itinerary: str
     llm_calls: int
 
+PROMPT_FOR_FLIGHT_AGENT = """
+You are a travel flight expert.
+User Query: {query}
+
+Airport Information: {airport_data}
+Airline Information: {airline_data}
+
+Generate:
+1. A likely departure airport
+2. A likely arrival airport
+3. Airlines serving this route
+4. Typical flight duration
+5. Estimated airfare range
+6. Peek season pricing warning
+7. Booking advice
+"""
 # =============
 #  Flight agent
 # =============
-def flight_agent(state: TravelState): # -> TravelState:
+def flight_agent(state: TravelState):
+    print("\nINSIDE FLIGHT AGENT\n")
+
     # extract the user query from the state
     query = state.get("user_query", "")
-    # call the flight search tool with the user query
-    flight_data = search_flights(query)
+    response = None
+    try:
+        airports = asyncio.run(search_flight_info_with_mcp(tool_name="list_airports"))
+        airlines = asyncio.run(search_flight_info_with_mcp(tool_name="list_airlines"))
+
+        print(f"\nAIRPORTS: {airports}\n")
+        print(f"\nAIRLINES: {airlines}\n")
+
+        prompt = PROMPT_FOR_FLIGHT_AGENT.format(
+            query=query,
+            airport_data = str(airports)[:3000],
+            airline_data = str(airlines)[:3000]
+        )
+
+        response = llm.invoke(
+            [
+                SystemMessage(content="Your are an expert travel flight planner."),
+                HumanMessage(content=prompt)
+            ]
+        )
+    except Exception as e:
+        print(f"Flight information unavailable: {str(e)}")
+
+    flight_data = response.content if response else "No flight data generated."
+
     # update the state with the flight results
     return {
         "flight_results": flight_data,
@@ -91,7 +133,7 @@ def flight_agent(state: TravelState): # -> TravelState:
 def hotel_agent(state: TravelState):
     query = f"Best hotels for {state.get('user_query', '')}"
     # hotel_data = duckduckgo_search(query)
-    hotel_data = asyncio.run(search_with_ddg(query))
+    hotel_data = asyncio.run(search_hotels_info_with_mcp(query))
 
     return {
         "hotel_results": hotel_data,
