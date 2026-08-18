@@ -1,7 +1,8 @@
-from tools.search_tool import duckduckgo_search
-from tools.flight_tool import search_flights
+# tools folder removed
+# from tools.search_tool import duckduckgo_search
+# from tools.flight_tool import search_flights
 # from mcp_client_test import get_all_mcp_tools, get_ddg_search_tool, search_with_ddg
-from mcp_client import get_all_mcp_tools
+from mcp_client import get_all_mcp_tools, get_search_tools, get_aviation_tools, search_flight_info_with_mcp, search_hotels_info_with_mcp
 import asyncio
 
 # test the duckduckgo_search function
@@ -29,5 +30,19 @@ print(res)
 
 if __name__ == "__main__":
     asyncio.run(get_all_mcp_tools())
-    # result = asyncio.run(search_with_ddg("What are best hotels in Addis Ababa?"))
+    # asyncio.run(get_search_tools())
+    # asyncio.run(get_aviation_tools())
+    # result = asyncio.run(search_hotels_info_with_mcp("What are best hotels in Addis Ababa?"))
     # print(result)
+    """
+    tool_args1 = {
+        "query": "Best airlines from Addis Ababa to Dubai"
+    }
+    tool_args2 = {
+        "query": "Best airporst in Dubai"
+    }
+    airlines = asyncio.run(search_flight_info_with_mcp("list_airlines", tool_args1))
+    airports = asyncio.run(search_flight_info_with_mcp("list_airports", tool_args2))
+    print("AIRPORTS:\n", airports)
+    print("\n\nAIRLINES:\n", airlines)
+    """
