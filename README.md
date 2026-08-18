@@ -48,16 +48,6 @@ The implementation uses:
 - **MCP-connected tools** for flight, hotel, and weather information
 - **PostgreSQL** for persistent conversation state
 
-
-## Architecture
-
-### Without MCP (original)
-![Without MCP](media/without_MCP.jpeg)
-
-### With MCP (this version)
-![With MCP](media/with_MCP.jpeg)
-Tools (flight search, web search, weather) are served as MCP servers and consumed by agents through the MCP client interface.
-
 ## Agents
 
 | Agent | Role |
