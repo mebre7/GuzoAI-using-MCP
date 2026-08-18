@@ -1,9 +1,8 @@
 #test1.py
-FRONTEND_README.md
 PRODUCT_LANDING_PAGE.md
 diagram.excalidraw
-media/with_MCP.jpeg
-media/without_MCP.jpeg
+media/with_MCP1.jpeg
+media/without_MCP1.jpeg
 Dockerfile
 .gitignore
 .dockerignore
@@ -27,6 +26,8 @@ ENV/
 # Packaging / build artifacts
 build/
 dist/
+frontend2/node_modules/
+frontend2/dist/
 *.egg-info/
 pip-wheel-metadata/
 
