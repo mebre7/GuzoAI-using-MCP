@@ -22,3 +22,5 @@ nest-asyncio
 mcp
 langchain-mcp-adapters
 duckduckgo-mcp-server
+
+langchain-google-genai
